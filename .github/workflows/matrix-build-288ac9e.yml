@@ -6,13 +6,12 @@ on:
 
 jobs:
   build:
-    name: Matrix Build Job
     runs-on: ubuntu-latest
 
     strategy:
-      matrix:
-        node-version: [14, 16, 18]   # 3 different variants (Node.js versions)
       fail-fast: false
+      matrix:
+        node-version: [14, 16, 18]   # ✅ three variants (creates 3 jobs in parallel)
 
     steps:
       - name: Checkout repository
@@ -30,12 +29,12 @@ jobs:
       - name: Generate build artifact
         run: |
           echo "Build output for Node.js version ${{ matrix.node-version }}" > build_output.txt
-          echo "Generated on $(date)" >> build_output.txt
-          echo "Matrix variant: node-${{ matrix.node-version }}" >> build_output.txt
-          cat build_output.txt
+          echo "Generated at $(date)" >> build_output.txt
+          echo "Variant: node-${{ matrix.node-version }}" >> build_output.txt
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-288ac9e-v${{ matrix.node-version }}
           path: build_output.txt
+
