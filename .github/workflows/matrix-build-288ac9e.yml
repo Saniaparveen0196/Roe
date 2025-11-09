@@ -1,0 +1,41 @@
+name: Multi-Platform Matrix Build (288ac9e)
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: Matrix Build Job
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14, 16, 18]   # 3 different variants (Node.js versions)
+      fail-fast: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Required identifier step
+      - name: matrix-288ac9e
+        run: echo "Building for Node.js version ${{ matrix.node-version }}"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Generate build artifact
+        run: |
+          echo "Build output for Node.js version ${{ matrix.node-version }}" > build_output.txt
+          echo "Generated on $(date)" >> build_output.txt
+          echo "Matrix variant: node-${{ matrix.node-version }}" >> build_output.txt
+          cat build_output.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-288ac9e-v${{ matrix.node-version }}
+          path: build_output.txt
